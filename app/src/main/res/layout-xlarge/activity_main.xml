@@ -36,7 +36,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="رقم الهاتف"
+                android:hint="@string/phone"
                 android:textColorHint="@color/colorAccent"
                 android:id="@+id/phoneNumber"
                 android:inputType="number"
@@ -51,7 +51,7 @@
             <AutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="اسم المدينه"
+                android:hint="@string/city"
                 android:textColorHint="@color/colorAccent"
                 android:id="@+id/cityName"
                 android:layout_marginTop="30dp"/>
@@ -65,7 +65,6 @@
             android:src="@drawable/done"
             android:id="@+id/register"/>
     </LinearLayout>
-
 
 
 </android.support.design.widget.CoordinatorLayout>
