@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     GPSTracker mGps;
     EditText txtPhone;
     FloatingActionButton btnRegister;
-
+    String phoneNum;
     CoordinatorLayout coordinateLayout;
     Snackbar snackbar;
     Timestamp timestamp;
@@ -57,7 +57,9 @@ public class MainActivity extends AppCompatActivity {
                 if(!InternetConnection.isConnectingToInternet(MainActivity.this)){
                     showSnackBar();
                 }else {
-                    sendData();
+                    if(validateFields()) {
+                        sendData();
+                    }
                 }
             }
         });
@@ -141,6 +143,20 @@ public class MainActivity extends AppCompatActivity {
 
         Volley.newRequestQueue(MainActivity.this).add(stringRequest);
 
+    }
+
+    public boolean validateFields() {
+        boolean valid = true;
+        phoneNum=txtPhone.getText().toString();
+
+        if (phoneNum.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(phoneNum).matches()) {
+            txtPhone.setError("تأكد من رقم الهاتف.");
+            valid = false;
+        } else {
+            txtPhone.setError(null);
+        }
+
+        return valid;
     }
 }
 
