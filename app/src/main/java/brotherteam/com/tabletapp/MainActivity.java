@@ -18,6 +18,13 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -29,28 +36,18 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import brotherteam.com.tabletapp.Adapter.PlaceArrayAdapter;
+import brotherteam.com.tabletapp.connection.GPSTracker;
+import brotherteam.com.tabletapp.connection.InternetConnection;
 
-public class MainActivity extends AppCompatActivity  implements GoogleApiClient.OnConnectionFailedListener,
-        GoogleApiClient.ConnectionCallbacks{
-
-    //google AutoComplete
-    private static final int GOOGLE_API_CLIENT_ID = 0;
-    private GoogleApiClient mGoogleApiClient;
-    private PlaceArrayAdapter mPlaceArrayAdapter;
-    private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(
-            new LatLng(37.398160, -122.180831), new LatLng(37.430610, -121.972090));
-
-    private static final int PLACE_PICKER_FLAG = 1;
-
-    //------------------------------------------
-
+public class MainActivity extends AppCompatActivity {
+    GPSTracker mGps;
     EditText txtPhone;
-    AutoCompleteTextView txtCity;
     FloatingActionButton btnRegister;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,35 +55,28 @@ public class MainActivity extends AppCompatActivity  implements GoogleApiClient.
         setContentView(R.layout.activity_main);
 
         txtPhone=(EditText) findViewById(R.id.phoneNumber);
-        txtCity =(AutoCompleteTextView)  findViewById(R.id.cityName);
         btnRegister=(FloatingActionButton) findViewById(R.id.register);
 
-        mGoogleApiClient = new GoogleApiClient.Builder(MainActivity.this)
-                .addApi(Places.GEO_DATA_API)
-                .enableAutoManage(this, GOOGLE_API_CLIENT_ID, this)
-                .addConnectionCallbacks(this)
-                .build();
-
-        txtCity.setOnItemClickListener(mAutocompleteClickListener);
-
-        mPlaceArrayAdapter = new PlaceArrayAdapter(this, android.R.layout.simple_list_item_1,
-                BOUNDS_MOUNTAIN_VIEW, null);
-
+        mGps=new GPSTracker(MainActivity.this);
 
         // btn Register click
-
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendData();
+                if(!InternetConnection.isConnectingToInternet(MainActivity.this)){
+                    Toast.makeText(MainActivity.this, "Error Connection", Toast.LENGTH_SHORT).show();
+                }else {
+                    sendData();
+                }
             }
         });
 
     }
 
     /**
-     *
      *Method to send Data to Server... Json Code
+     * you have class for current jps using it to get latitude and langituide its method in GPSTRACKER CLASS use It
+     *
      */
 
     private void sendData() {
@@ -95,94 +85,32 @@ public class MainActivity extends AppCompatActivity  implements GoogleApiClient.
     }
 
 
-    /**
-     * google play service adapter to enable Auto complete...
-     */
-    private AdapterView.OnItemClickListener mAutocompleteClickListener
-            = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            final PlaceArrayAdapter.PlaceAutocomplete item = mPlaceArrayAdapter.getItem(position);
-            final String placeId = String.valueOf(item.placeId);
-            Log.i( "Selected: " ," "+ item.description);
-            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
-                    .getPlaceById(mGoogleApiClient, placeId);
-            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
-
-        }
-    };
-
-
-    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
-            = new ResultCallback<PlaceBuffer>() {
-        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        @Override
-        public void onResult(PlaceBuffer places) {
-            if (!places.getStatus().isSuccess()) {
-                Log.e("place",places.getStatus().toString());
-                return;
-            }
-            // Selecting the first object buffer.
-            final Place place = places.get(0);
-            CharSequence attributions = places.getAttributions();
-
-            Resources res = getApplicationContext().getResources();
-
-            Locale locale = new Locale("ar"); //<--- use your locale code here
-            Locale.setDefault(locale);
-
-            Configuration config = new Configuration();
-            config.locale = locale;
-
-            getBaseContext().getResources().updateConfiguration(config,
-                    getBaseContext().getResources().getDisplayMetrics());
-            LatLng latLng= place.getLatLng();
-
-            txtCity.setText(Html.fromHtml(place.getAddress() + ""));
-            txtCity.setTextLocale(locale);
-        }
-    };
+//    StringRequest stringRequest=new StringRequest(Request.Method.POST, "http://196.218.129.64/upload.php", new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//
+//            }
+//        }){
+//            @Override
+//            protected Map<String, String> getParams() throws AuthFailureError {
+//                Map<String,String> param=new HashMap<>();
+//                String lat=String.valueOf(mGps.getLatitude());
+//                String lon=String.valueOf(mGps.getLongitude());
+//                param.put();
+//                param.put("phone",txtPhone.getText().toString());
+//                param.put("latitude",lat);
+//                param.put("longit")
+//                return super.getParams();
+//            }
+//        };
+//
+//        Volley.newRequestQueue(MainActivity.this).add(stringRequest);
 
 
-    /**
-     * Activiy result to make event due to action...
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case PLACE_PICKER_FLAG:
-                    Place place = PlacePicker.getPlace(data, this);
-                    break;
-            }
-        }
-    }
-
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        mPlaceArrayAdapter.setGoogleApiClient(mGoogleApiClient);
-        //Log.i(LOG_TAG, "Google Places API connected.");
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-        mPlaceArrayAdapter.setGoogleApiClient(null);
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-      //  Log.e( "Google Places API connection failed with error code: ", " " + connectionResult.getErrorCode());
-
-        Toast.makeText(this,
-                "خطأ فى الاتصال",
-                Toast.LENGTH_LONG).show();
-    }
 }
 
