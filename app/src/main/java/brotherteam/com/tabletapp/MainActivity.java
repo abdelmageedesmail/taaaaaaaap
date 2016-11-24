@@ -1,46 +1,31 @@
 package brotherteam.com.tabletapp;
 
-import android.annotation.TargetApi;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBuffer;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
-
-import brotherteam.com.tabletapp.Adapter.PlaceArrayAdapter;
 import brotherteam.com.tabletapp.connection.GPSTracker;
 import brotherteam.com.tabletapp.connection.InternetConnection;
 
@@ -49,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
     EditText txtPhone;
     FloatingActionButton btnRegister;
 
+    CoordinatorLayout coordinateLayout;
+    Snackbar snackbar;
+    Timestamp timestamp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,15 +44,18 @@ public class MainActivity extends AppCompatActivity {
 
         txtPhone=(EditText) findViewById(R.id.phoneNumber);
         btnRegister=(FloatingActionButton) findViewById(R.id.register);
-
+        coordinateLayout=(CoordinatorLayout) findViewById(R.id.coordinateLayout);
         mGps=new GPSTracker(MainActivity.this);
+
+        timestamp = new Timestamp(System.currentTimeMillis());
+        Log.e("timeStamp",timestamp+"");
 
         // btn Register click
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!InternetConnection.isConnectingToInternet(MainActivity.this)){
-                    Toast.makeText(MainActivity.this, "Error Connection", Toast.LENGTH_SHORT).show();
+                    showSnackBar();
                 }else {
                     sendData();
                 }
@@ -73,6 +64,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void showSnackBar() {
+
+        snackbar = Snackbar.make(coordinateLayout, "لا يوجد إتصال بالإنترنت", Snackbar.LENGTH_INDEFINITE)
+                .setAction("إعادة المحاولة", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (InternetConnection.isConnectingToInternet(MainActivity.this)) {
+                             sendData();
+                        } else {
+                            showSnackBar();
+                        }
+                    }
+                });
+        snackbar.setActionTextColor(ResourcesCompat.getColor(getResources(), R.color.snackBarActionTxtColor, null));
+        snackbar.show();
+    }
+
+
     /**
      *Method to send Data to Server... Json Code
      * you have class for current jps using it to get latitude and langituide its method in GPSTRACKER CLASS use It
@@ -80,37 +89,59 @@ public class MainActivity extends AppCompatActivity {
      */
 
     private void sendData() {
+        final ProgressDialog progressDialog=new ProgressDialog(MainActivity.this);
+        progressDialog.setMessage("جارى ارسال البيانات...");
+        progressDialog.show();
+        StringRequest stringRequest=new StringRequest(Request.Method.POST, "http://196.218.129.64/upload.php", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.e("response",response);
+                progressDialog.dismiss();
 
+                final Dialog dialog=new Dialog(MainActivity.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.dialog_congrates);
+                dialog.setCanceledOnTouchOutside(false);
+                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                Window window = dialog.getWindow();
+                lp.copyFrom(window.getAttributes());
+                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                window.setAttributes(lp);
+
+                Button done=(Button) dialog.findViewById(R.id.done);
+                done.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+                txtPhone.setText("");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("errorMessage",error.getMessage());
+                progressDialog.dismiss();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> param=new HashMap<>();
+                String lat=String.valueOf(mGps.getLatitude());
+                String lon=String.valueOf(mGps.getLongitude());
+                param.put("phone",txtPhone.getText().toString());
+                param.put("latitude",lat);
+                param.put("longitude",lon);
+                param.put("last_update",timestamp+"");
+                return param;
+            }
+        };
+
+        Volley.newRequestQueue(MainActivity.this).add(stringRequest);
 
     }
-
-
-//    StringRequest stringRequest=new StringRequest(Request.Method.POST, "http://196.218.129.64/upload.php", new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//
-//            }
-//        }){
-//            @Override
-//            protected Map<String, String> getParams() throws AuthFailureError {
-//                Map<String,String> param=new HashMap<>();
-//                String lat=String.valueOf(mGps.getLatitude());
-//                String lon=String.valueOf(mGps.getLongitude());
-//                param.put();
-//                param.put("phone",txtPhone.getText().toString());
-//                param.put("latitude",lat);
-//                param.put("longit")
-//                return super.getParams();
-//            }
-//        };
-//
-//        Volley.newRequestQueue(MainActivity.this).add(stringRequest);
-
-
 }
+
 

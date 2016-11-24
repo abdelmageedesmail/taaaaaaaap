@@ -27,4 +27,5 @@ dependencies {
     compile 'com.android.support:design:23.4.0'
     compile 'com.google.android.gms:play-services-places:9.4.0'
     compile 'com.android.volley:volley:1.0.0'
+    compile 'devlight.io:arcprogressstackview:1.0.4'
 }

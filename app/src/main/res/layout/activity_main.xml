@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="brotherteam.com.tabletapp.MainActivity">
+    tools:context="brotherteam.com.tabletapp.MainActivity"
+    android:background="#ffffff"
+    android:id="@+id/coordinateLayout">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,18 +34,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:hintTextAppearance="@style/TextAppearence"
-            >
+            android:textColorHint="@color/colorPrimaryDark"
+            android:padding="9dp">
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/phone"
-                android:textColorHint="@color/colorAccent"
+                android:textColorHint="@color/colorPrimaryDark"
                 android:id="@+id/phoneNumber"
                 android:inputType="number"
                 android:layout_marginTop="30dp"/>
 
         </android.support.design.widget.TextInputLayout>
-
 
         <android.support.design.widget.FloatingActionButton
             android:layout_width="50dp"
