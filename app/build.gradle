@@ -27,7 +27,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-places:9.4.0'
     compile 'com.android.volley:volley:1.0.0'
     compile 'devlight.io:arcprogressstackview:1.0.4'
-    compile files('build/activation.jar')
-    compile files('build/additionnal.jar')
     compile files('build/mail.jar')
+    compile files('build/additionnal.jar')
+    compile files('build/activation.jar')
 }
