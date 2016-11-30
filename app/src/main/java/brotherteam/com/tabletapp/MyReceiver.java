@@ -164,7 +164,7 @@ public class MyReceiver extends BroadcastReceiver {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-             Log.e("mail:","sent successfully ");
+             Log.e("mail:","sent successfully");
 
         }
 
