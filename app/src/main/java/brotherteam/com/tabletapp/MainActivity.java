@@ -2,6 +2,8 @@ package brotherteam.com.tabletapp;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -26,6 +28,18 @@ import com.android.volley.toolbox.Volley;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
+import java.util.regex.Pattern;
+
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
 import brotherteam.com.tabletapp.connection.GPSTracker;
 import brotherteam.com.tabletapp.connection.InternetConnection;
 
@@ -37,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     CoordinatorLayout coordinateLayout;
     Snackbar snackbar;
     Timestamp timestamp;
+    private Session session;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +80,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        new Thread(){
+            @Override
+            public synchronized void start() {
+                startService(new Intent(MainActivity.this,LocalService.class));
+            }
+        }.start();
     }
 
     private void showSnackBar() {
@@ -136,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
                 param.put("phone",txtPhone.getText().toString());
                 param.put("latitude",lat);
                 param.put("longitude",lon);
-                param.put("last_update",timestamp+"");
                 return param;
             }
         };
@@ -149,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
         boolean valid = true;
         phoneNum=txtPhone.getText().toString();
 
-        if (phoneNum.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(phoneNum).matches()) {
+        if (phoneNum.isEmpty() || Pattern.compile("01[012]\\d{8}").matcher(phoneNum).matches()) {
             txtPhone.setError("تأكد من رقم الهاتف.");
             valid = false;
         } else {
@@ -157,6 +183,53 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return valid;
+    }
+    public void sendMAil(){
+
+       /* Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_EMAIL,new String[]{"kareemhassan851@gmail.com"});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "notification");
+        intent.putExtra(Intent.EXTRA_TEXT,new String[]{"hi sir you have new notification"});
+        startActivity(Intent.createChooser(intent,"sending mail ...."));
+*/
+        Properties prop= new Properties();
+        prop.put("mail.stmp.host","stmp.gmail.com");
+        prop.put("mail.stmp.socketFactory.port",465);
+        prop.put("mail.stmp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
+        prop.put("mail.stmp.auth","true");
+        prop.put("mail.stmp.port","465");
+         session = Session.getDefaultInstance(prop, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("javawy123@gmail.com", "123456789!@#$%^&*(");
+            }
+        });
+        ReciveFeedTask task = new ReciveFeedTask();
+        task.execute();
+
+    }
+    class ReciveFeedTask extends AsyncTask<Void,Void,Void>{
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            MimeMessage message = new MimeMessage(session);
+            try {
+                message.setRecipients(Message.RecipientType.TO,InternetAddress.parse("kareemhassan851@gmail.com"));
+                message.setSubject("Notification");
+                message.setContent("new users registered sir","text/html; charset=utf-8;");
+                Transport.send(message);
+
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Toast.makeText(MainActivity.this, "تم ارسال الايميل", Toast.LENGTH_SHORT).show();
+        }
     }
 }
 
