@@ -30,4 +30,7 @@ dependencies {
     compile files('build/mail.jar')
     compile files('build/additionnal.jar')
     compile files('build/activation.jar')
+    compile files('libs/mail.jar')
+    compile files('libs/additionnal.jar')
+    compile files('libs/activation.jar')
 }
