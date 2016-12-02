@@ -103,9 +103,7 @@ public class MyReceiver extends BroadcastReceiver {
                         //System.out.println(counter+" tmp:"+tmp.get(counter)+" sid:"+sid);
                     }
                 }
-
                 counter++;
-
             }
         }, new Response.ErrorListener() {
             @Override

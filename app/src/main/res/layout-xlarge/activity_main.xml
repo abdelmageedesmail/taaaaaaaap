@@ -25,7 +25,8 @@
             android:layout_height="wrap_content"
             android:text="برجاء تسجيل الدخول ليصلك اعلانتنا"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="35sp"
+            android:textSize="40sp"
+            android:id="@+id/title"
             android:textStyle="bold"
             android:layout_marginTop="20dp"/>
 
@@ -33,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:hintTextAppearance="@style/TextAppearence"
-            android:padding="13dp"
+            android:padding="15dp"
             android:textColorHint="@color/colorPrimaryDark"
             >
             <EditText

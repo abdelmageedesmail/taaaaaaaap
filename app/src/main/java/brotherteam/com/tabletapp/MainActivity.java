@@ -16,6 +16,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -40,6 +41,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import brotherteam.com.tabletapp.Fonts.UtilitiesClass;
 import brotherteam.com.tabletapp.connection.GPSTracker;
 import brotherteam.com.tabletapp.connection.InternetConnection;
 
@@ -52,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
     Snackbar snackbar;
     Timestamp timestamp;
     private Session session;
+    TextView txtTitle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
         btnRegister=(FloatingActionButton) findViewById(R.id.register);
         coordinateLayout=(CoordinatorLayout) findViewById(R.id.coordinateLayout);
         mGps=new GPSTracker(MainActivity.this);
-
+        txtTitle=(TextView) findViewById(R.id.title);
+        setUpFonts();
         timestamp = new Timestamp(System.currentTimeMillis());
         Log.e("timeStamp",timestamp+"");
 
@@ -81,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
 
     @Override
     protected void onStart() {
@@ -111,6 +117,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void setUpFonts(){
+        UtilitiesClass.setFont(txtTitle,MainActivity.this,0);
+        UtilitiesClass.setFont(txtPhone,MainActivity.this,1);
+    }
     /**
      *Method to send Data to Server... Json Code
      * you have class for current jps using it to get latitude and langituide its method in GPSTRACKER CLASS use It
