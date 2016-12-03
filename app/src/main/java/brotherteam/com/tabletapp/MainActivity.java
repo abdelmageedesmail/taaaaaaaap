@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     Timestamp timestamp;
     private Session session;
     TextView txtTitle;
-
+////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
