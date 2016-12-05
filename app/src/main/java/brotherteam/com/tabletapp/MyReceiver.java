@@ -17,6 +17,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -88,19 +89,19 @@ public class MyReceiver extends BroadcastReceiver {
 
                 if(counter==0){
                     tmp.add(counter,sid);
-                  //  System.out.println("hello "+counter+" tmp:"+tmp.get(counter)+" sid:"+sid);
+                    System.out.println("hello "+counter+" tmp:"+tmp.get(counter)+" sid:"+sid);
                     }
                 else{
                     tmp.add(counter,sid);
                     if(tmp.get(counter)>tmp.get(counter-1)) {
-                        //  System.out.println("do notification");
+                          System.out.println("do notification");
                         sendMail(context);
                         sendNotification(context,counter);
-                        //System.out.println(counter+" tmp:"+tmp.get(counter-1)+" current:"+tmp.get(counter));
+                        System.out.println(counter+" tmp:"+tmp.get(counter-1)+" current:"+tmp.get(counter));
                     }
                     else{
-                        //System.out.println("no notification");
-                        //System.out.println(counter+" tmp:"+tmp.get(counter)+" sid:"+sid);
+                        System.out.println("no notification");
+                        System.out.println(counter+" tmp:"+tmp.get(counter)+" sid:"+sid);
                     }
                 }
                 counter++;
@@ -122,6 +123,7 @@ public class MyReceiver extends BroadcastReceiver {
                 alertDialog.show();
             }
         });
+        Volley.newRequestQueue(context).add(request);
 
     }
 

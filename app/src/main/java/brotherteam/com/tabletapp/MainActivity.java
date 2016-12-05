@@ -67,9 +67,9 @@ public class MainActivity extends AppCompatActivity {
         coordinateLayout=(CoordinatorLayout) findViewById(R.id.coordinateLayout);
         mGps=new GPSTracker(MainActivity.this);
         txtTitle=(TextView) findViewById(R.id.title);
-        setUpFonts();
-        timestamp = new Timestamp(System.currentTimeMillis());
-        Log.e("timeStamp",timestamp+"");
+       // setUpFonts();
+        //timestamp = new Timestamp(System.currentTimeMillis());
+        //Log.e("timeStamp",timestamp+"");
 
         // btn Register click
         btnRegister.setOnClickListener(new View.OnClickListener() {
