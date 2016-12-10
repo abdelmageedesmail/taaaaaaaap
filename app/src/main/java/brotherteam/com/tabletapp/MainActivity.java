@@ -48,7 +48,7 @@ import brotherteam.com.tabletapp.connection.InternetConnection;
 public class MainActivity extends AppCompatActivity {
     GPSTracker mGps;
     EditText txtPhone;
-    FloatingActionButton btnRegister;
+    Button btnRegister;
     String phoneNum;
     CoordinatorLayout coordinateLayout;
     Snackbar snackbar;
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         txtPhone=(EditText) findViewById(R.id.phoneNumber);
-        btnRegister=(FloatingActionButton) findViewById(R.id.register);
+        btnRegister=(Button) findViewById(R.id.register);
         coordinateLayout=(CoordinatorLayout) findViewById(R.id.coordinateLayout);
         mGps=new GPSTracker(MainActivity.this);
         txtTitle=(TextView) findViewById(R.id.title);
@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
     public void setUpFonts(){
         UtilitiesClass.setFont(txtTitle,MainActivity.this,0);
         UtilitiesClass.setFont(txtPhone,MainActivity.this,1);
+        UtilitiesClass.setFont(btnRegister,MainActivity.this,0);
     }
     /**
      *Method to send Data to Server... Json Code

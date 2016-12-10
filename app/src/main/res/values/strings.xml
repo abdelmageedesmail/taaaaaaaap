@@ -2,4 +2,5 @@
     <string name="app_name">TabletApp</string>
     <string name="phone">رقم الهاتف</string>
     <string name="city">اسم المدينه</string>
+    <string name="register">تسجيل عضويه</string>
 </resources>
