@@ -224,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
             MimeMessage message = new MimeMessage(session);
             try {
-                message.setRecipients(Message.RecipientType.TO,InternetAddress.parse("kareemhassan851@gmail.com"));
+                message.setRecipients(Message.RecipientType.TO,InternetAddress.parse("javawy123@hotmail.com"));
                 message.setSubject("Notification");
                 message.setContent("new users registered sir","text/html; charset=utf-8;");
                 Transport.send(message);

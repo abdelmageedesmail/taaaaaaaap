@@ -12,16 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height= "wrap_content"
         android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"><![CDATA[
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="@drawable/back"
-            android:layout_marginTop="70dp"
-            />
-
-        <TextView
+        TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="برجاء تسجيل الدخول ليصلك اعلانتنا"
@@ -29,6 +22,21 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginTop="20dp"/>
+
+        ]]>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:background="@drawable/efinal"
+
+            android:layout_height="150dp"
+            android:layout_marginTop="20dp" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:id="@+id/imageView2"
+            android:background="@drawable/lfont"
+            android:layout_height="70dp" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -42,8 +50,7 @@
                 android:hint="@string/phone"
                 android:textColorHint="@color/colorPrimaryDark"
                 android:id="@+id/phoneNumber"
-                android:inputType="number"
-                android:layout_marginTop="30dp"/>
+                android:inputType="number" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -51,7 +58,6 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
-            android:layout_marginTop="30dp"
             android:src="@drawable/done"
             android:id="@+id/register"/>
     </LinearLayout>
