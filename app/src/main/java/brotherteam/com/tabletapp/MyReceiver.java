@@ -138,7 +138,7 @@ public class MyReceiver extends BroadcastReceiver {
         session = Session.getDefaultInstance(prop, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("javawy123@gmail.com", "123456789!@#$%^&*(");
+                return new PasswordAuthentication("abdelmageedalghor44@gmail.com", "123456789!@#$%^&*(");
             }
         });
         ReciveFeedTask task = new ReciveFeedTask();
@@ -151,7 +151,7 @@ public class MyReceiver extends BroadcastReceiver {
         protected Void doInBackground(Void... params) {
             MimeMessage message = new MimeMessage(session);
             try {
-                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("kareemhassan851@gmail.com"));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("abdelmageedalghor44@gmail.com"));
                 message.setSubject("Notification");
                 message.setContent("new users registered sir","text/html; charset=utf-8;");
                 Transport.send(message);

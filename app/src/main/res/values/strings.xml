@@ -1,6 +1,13 @@
 <resources>
-    <string name="app_name">TabletApp</string>
+    <string name="app_name">B Teach</string>
     <string name="phone">رقم الهاتف</string>
     <string name="city">اسم المدينه</string>
+    <string name="workStyle">طبيعة العمل </string>
+    <string name="phoneNum">الرقم الارضى</string>
+    <string name="email">البريد الايكترونى </string>
+    <string name="note">ملاحظات</string>
     <string name="register">تسجيل عضويه</string>
+    <string name="firstname">الاسم الاول</string>
+    <string name="lastname">الاسم الاخير</string>
+    <string name="workplace">مكان العمل</string>
 </resources>

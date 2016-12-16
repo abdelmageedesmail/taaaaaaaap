@@ -12,21 +12,23 @@ import android.widget.TextView;
  * Created by abdelmageed on 8/23/2016.
  */
 public class UtilitiesClass {
-    public static void setFont(TextView textView, Context context, int fontIndex) {
-        Typeface font = null;
 
-        switch (fontIndex) {
-            case 0:
-                font = Typeface.createFromAsset(context.getResources().getAssets(), "cairo_bold.ttf");
-                break;
+//    public static void setFont(TextView textView, Context context, int fontIndex) {
+//        Typeface font = null;
+//
+//        switch (fontIndex) {
+//            case 0:
+//                font = Typeface.createFromAsset(context.getResources().getAssets(), "cairo_bold.ttf");
+//                break;
+//
+//            case 1:
+//                font = Typeface.createFromAsset(context.getResources().getAssets(), "cairo_regular.ttf");
+//                break;
+//        }
+//
+//        textView.setTypeface(font);
+//    }
 
-            case 1:
-                font = Typeface.createFromAsset(context.getResources().getAssets(), "cairo_regular.ttf");
-                break;
-        }
-
-        textView.setTypeface(font);
-    }
 
     public static void setFont(EditText editText, Context context, int fontIndex) {
         Typeface font = null;
